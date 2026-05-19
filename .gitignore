@@ -1,0 +1,24 @@
+# R files
+.Rhistory
+.Rdata
+.RData
+.Rproj.user/
+*.Rproj
+.DS_Store
+
+# RStudio
+.Rproj.user
+.Rbuildignore
+
+# IDE
+.vscode/
+.idea/
+
+# Folders to ignore
+datos/
+literatura/
+
+# Temporary files
+*.tmp
+*.swp
+*~
