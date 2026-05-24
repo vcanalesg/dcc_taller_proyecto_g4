@@ -15,7 +15,8 @@ tabla_url <- tribble(
     "SNED-2024-2025", "Sistema Nacional de Evaluación 2024-2025", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/05/SNED-2024-2025.rar", "rar",
     "Evaluacion-Docente-2024", "Evaluación de docentes 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2026/03/Evaluacion-Docente-2024.rar", "rar",
     "Directorio-Docentes-2024", "Directorio de docentes 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/08/Directorio-Docentes-2024.rar", "rar",
-    "Resumen-Docentes-EE-2024", "Resumen de docentes 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/08/Resumen-Docentes-EE-2024.zip", "zip")
+    "Resumen-Docentes-EE-2024", "Resumen de docentes 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/08/Resumen-Docentes-EE-2024.zip", "zip",
+    "Docentes-por-curso-y-subsector-2025", "Docentes por curso y subsector 2025", "https://datosabiertos.mineduc.cl/wp-content/uploads/2026/04/Docentes-por-curso-y-subsector-2025.rar", "rar")
 
 
 # función para descargar y extraer archivos

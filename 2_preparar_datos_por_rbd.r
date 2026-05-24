@@ -93,3 +93,36 @@ matricula_rbd <- matricula %>%
             n_rezago_media = sum(rezago_media == 1, na.rm = TRUE),
             p_rezago_media = n_rezago_media / n_matricula_media) %>% 
   ungroup()
+
+## preparar datos idps -----
+# 4 indicadores
+
+ipds_indicadores_rbd <- idps_indicadores %>%
+  pivot_wider(names_from = ind, values_from = prom, names_prefix = "ind_") %>%
+  clean_names() %>%
+  select(rbd, ind_am, ind_cc, ind_hv, ind_pf) %>%
+  group_by(rbd) %>%
+  summarise(across(c(ind_am, ind_cc, ind_hv, ind_pf), ~ mean(.x, na.rm = TRUE)), .groups = "drop")      
+  
+glimpse(ipds_indicadores_rbd)
+
+# 11 dimensiones
+idps_dim_rbd <- idps_dim %>%
+  pivot_wider(names_from = dim, values_from = prom, names_prefix = "dim_") %>%
+  clean_names() %>%
+  select(rbd, starts_with("dim_")) %>%
+  group_by(rbd) %>%
+  summarise(across(starts_with("dim_"), ~ mean(.x, na.rm = TRUE)), .groups = "drop")
+
+glimpse(idps_dim_rbd)
+
+## 22 subdimensiones
+idps_sub_rbd <- idps_sub %>%
+  pivot_wider(names_from = sdim, values_from = c('niv_bajo_por', 'niv_medio_por', 'niv_alto_por')) %>%
+  clean_names() %>%
+  select(rbd, starts_with("niv_"), -ends_with("_por")) %>%
+  group_by(rbd) %>%
+  summarise(across(starts_with("niv_"), ~ mean(.x, na.rm = TRUE)), .groups = "drop")
+
+## preparar datos docentes -----
+

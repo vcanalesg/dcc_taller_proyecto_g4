@@ -38,3 +38,36 @@ df %>%
 
 #  255095 estudiantes de segundo medio
 
+## contar matrícula por educación de adultos
+# no hay casos 
+df %>%
+  filter(cod_ense %in% c(3,6,8)) %>%
+  count(cod_ense)
+
+## revisar distribución de edad de estudiantes de segundo medio
+df %>%
+  filter(cod_ense2 %in% c(5,7) & cod_grado2 == 2) %>%
+  summarise(media = mean(edad_alu, na.rm = TRUE),
+            mediana = median(edad_alu, na.rm = TRUE),
+            sd = sd(edad_alu, na.rm = TRUE),
+            min = min(edad_alu, na.rm = TRUE),
+            max = max(edad_alu, na.rm = TRUE))
+
+df %>%
+  filter(cod_ense2 %in% c(5,7) & cod_grado2 == 2) %>%
+  ggplot(aes(x = edad_alu)) +
+  geom_histogram(binwidth = 1, fill = "grey", color = "black") +
+  labs(title = "Distribución de edad de estudiantes de segundo medio",
+       x = "Edad del estudiante",
+       y = "Frecuencia") +
+  theme_minimal()
+
+
+## revisar establecimientos con estudiantes de segundo medio que tienen más de 20 años
+df %>%
+  filter(cod_ense2 %in% c(5,7) & cod_grado2 == 2 & edad_alu > 20) %>%
+  select(rbd, nom_rbd, cod_com_rbd, cod_com_alu, edad_alu) 
+
+# 18 casos, la mayoría corresponde a escuelas hospitalarias
+
+
