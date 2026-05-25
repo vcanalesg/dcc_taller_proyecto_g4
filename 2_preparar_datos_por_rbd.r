@@ -34,6 +34,11 @@ idps_indicadores <- file.path(path, "idps2m2024_rbd_preliminar.csv") %>%
   read_delim(delim = ";") %>%
   clean_names()
 
+# docentes por sector y curso
+docentes <- file.path(path, "20260316_Docentes_por_curso_y_subsector_2025_20260202_PUBL.csv") %>%
+  read_delim(delim = ";") %>%
+  clean_names()
+
 # evaluación docente 2024
 evaluacion_docente <- file.path(path, "20251118_EVALUACION_DOCENTE_2024_20251118_PUBL.csv") %>%
   read_delim(delim = ";") %>%
@@ -97,14 +102,14 @@ matricula_rbd <- matricula %>%
 ## preparar datos idps -----
 # 4 indicadores
 
-ipds_indicadores_rbd <- idps_indicadores %>%
+idps_indicadores_rbd <- idps_indicadores %>%
   pivot_wider(names_from = ind, values_from = prom, names_prefix = "ind_") %>%
   clean_names() %>%
   select(rbd, ind_am, ind_cc, ind_hv, ind_pf) %>%
   group_by(rbd) %>%
   summarise(across(c(ind_am, ind_cc, ind_hv, ind_pf), ~ mean(.x, na.rm = TRUE)), .groups = "drop")      
   
-glimpse(ipds_indicadores_rbd)
+glimpse(idps_indicadores_rbd)
 
 # 11 dimensiones
 idps_dim_rbd <- idps_dim %>%
@@ -125,4 +130,55 @@ idps_sub_rbd <- idps_sub %>%
   summarise(across(starts_with("niv_"), ~ mean(.x, na.rm = TRUE)), .groups = "drop")
 
 ## preparar datos docentes -----
+# docentes enseñanza media
+docentes_2domedio_rbd <- docentes %>%
+  # filtrar por docentes de 2do medio
+  filter(cod_ense %in% c(310, 363, 410,463, 510,563,610,663,710,763,810,863,910, 963)) %>%
+  filter(cod_grado == 2) %>%
+  # para cursos de formación general
+  filter(tipo_subsector == 2) %>%
+  # para cursos de tipo obligatorio
+  filter(obl_subsector == 1) %>%
+  # construir edad docente
+  mutate(doc_anio_nacimiento = as.numeric(substr(doc_fec_nac, 1, 4)),
+         doc_edad = ifelse(doc_fec_nac == 190001, NA, 2024 - doc_anio_nacimiento)) %>%
+  group_by(rbd) %>%
+  summarise(
+    n_docentes_rbd = n(),
+    promedio_doc_edad = mean(doc_edad, na.rm = TRUE),
+    mediana_doc_edad = median(doc_edad, na.rm = TRUE),
+    n_doc_mujeres = sum(doc_genero == 2, na.rm = TRUE),
+    p_doc_mujeres = n_doc_mujeres / n_docentes_rbd
+  )
 
+glimpse(docentes_2domedio_rbd)
+
+# revisar distribución n_docentes_rbd
+# docentes_2domedio_rbd %>%
+#   ggplot(aes(x = n_docentes_rbd)) +
+#  geom_histogram(bins = 30) +
+#  scale_x_continuous(breaks = seq(from = 0, to = 170, by = 10))
+
+# docentes_2domedio_rbd %>%
+# filter(n_docentes_rbd > 100) %>%
+#  select(rbd)
+# docentes %>%
+#  filter(rbd == 280) %>%
+#  select(nom_rbd)  
+
+# glimpse(docentes)
+
+# juntar datos por rbd ------
+
+rbd <- simce %>%
+  left_join(matricula_rbd, by = 'rbd') %>%
+  left_join(idps_indicadores_rbd, by = 'rbd') %>%
+  left_join(idps_dim_rbd, by = 'rbd') %>%
+  left_join(idps_sub_rbd, by = 'rbd') %>%
+  left_join(docentes_2domedio_rbd, by = 'rbd')
+
+glimpse(rbd)
+
+# exportar resultados para análisis -------
+
+arrow::write_parquet(rbd, file.path(path, 'rbd_consolidado.parquet'))
