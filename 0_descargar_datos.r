@@ -10,13 +10,17 @@ library(httr)
 
 tabla_url <- tribble(
     ~nombre, ~descripcion, ~url, ~tipo,
-    "Matricula-por-estudiante-2024", "Matrícula por estudiante 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/11/Matricula-por-estudiante-2024.rar", "rar",
+    "Matricula-por-estudiante-2024", "Matricula por estudiante 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/11/Matricula-por-estudiante-2024.rar", "rar",
     "Directorio-Oficial-Sostenedores-2024", "Directorio de sostenedores 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/11/Directorio-Oficial-Sostenedores-2024.rar", "rar",
-    "SNED-2024-2025", "Sistema Nacional de Evaluación 2024-2025", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/05/SNED-2024-2025.rar", "rar",
-    "Evaluacion-Docente-2024", "Evaluación de docentes 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2026/03/Evaluacion-Docente-2024.rar", "rar",
+    "SNED-2024-2025", "Sistema Nacional de Evaluacion 2024-2025", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/05/SNED-2024-2025.rar", "rar",
+    "Evaluacion-Docente-2024", "Evaluacion docente 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2026/03/Evaluacion-Docente-2024.rar", "rar",
+    "Evaluacion-Docente-2023", "Evaluacion docente 2023", "https://datosabiertos.mineduc.cl/wp-content/uploads/2026/03/Evaluacion-Docente-2023.rar", "rar",
+    "Evaluacion-Docente-2022", "Evaluacion docente 2022", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/05/Evaluacion-Docente-2022.rar", "rar",
+    "Evaluacion-Docente-2018", "Evaluacion docente 2018", "https://datosabiertos.mineduc.cl/wp-content/uploads/2021/12/Evaluacion-Docente-2018.zip", "zip",
     "Directorio-Docentes-2024", "Directorio de docentes 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/08/Directorio-Docentes-2024.rar", "rar",
     "Resumen-Docentes-EE-2024", "Resumen de docentes 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2024/08/Resumen-Docentes-EE-2024.zip", "zip",
-    "Docentes-por-curso-y-subsector-2025", "Docentes por curso y subsector 2025", "https://datosabiertos.mineduc.cl/wp-content/uploads/2026/04/Docentes-por-curso-y-subsector-2025.rar", "rar")
+    "Docentes-por-curso-y-subsector-2025", "Docentes por curso y subsector 2025", "https://datosabiertos.mineduc.cl/wp-content/uploads/2026/04/Docentes-por-curso-y-subsector-2025.rar", "rar",
+    "Asistencia-anual-2024", "Asistencia por estudiante 2024", "https://datosabiertos.mineduc.cl/wp-content/uploads/2026/02/Asistencia-anual-2024.rar", "rar")
 
 
 # función para descargar y extraer archivos

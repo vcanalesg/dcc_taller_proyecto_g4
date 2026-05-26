@@ -100,15 +100,10 @@ ggplot(df, aes(x = pf_pje)) +
 
 df %>%
   count(pf_cat_carrera) %>%
-  mutate(porcentaje = n / sum(n) * 100)
+  mutate(porcentaje = n / sum(n) * 100) %>%
+  adorn_totals()
 
 # ideas para el análisis:
 ## - calcular mediana evaluación docente por establecimiento
-## - calcular mediana de edad de profesores por establecimiento
 ## - calcular distribución de categorías de portafolio por establecimiento
 ## - calcular distribucion por tramo de edad de los docentes
-## - calcular distribución por sexo por establecimiento
-## - calcular número de docentes por establecimiento
-## - revisar si se puede distinguir entre docentes de básica y media
-## - revisar si se puede distinguir qué materias imparten los docentes
-## - revisar si se puede y tiene sentido trabajar con un subconjunto de profesores para ver los resultados de matemáticas en el Simce
