@@ -56,6 +56,14 @@ evaluacion_docente_18 <- file.path(path, "20200110_EVALUACION_DOCENTE_2018_10052
   read_delim(delim = ";") %>%
   clean_names()
 
+# sned 2024 - 2025
+
+locale_es <- locale(decimal_mark = ",", grouping_mark = ".")
+
+sned <- file.path(path, "20240503_SNED_2024_2025.csv") |>
+  read_delim(delim = ";", locale = locale_es) |>
+  clean_names()
+
 # preparar datos matricula -----
 
 matricula_rbd <- matricula %>%
@@ -247,6 +255,27 @@ sum(evaluacion_docente$mrun %in% docentes_matematicas)
 # solo enseñanza media: 2367 rbd con informacion para los docentes
 # incluyendo enseñanza basica:  14.185
 
+## preparar datos sned ------
+
+# pasar coma a punto para variables leidas como character
+sned <- sned %>%
+   mutate(efectivr = as.numeric(gsub(',', '.', efectivr)),
+          superar = as.numeric(gsub(',','.', superar)))
+
+# datos que tienen valor negativo pasarlos a 0 siguiendo la escala en el diccionario de variables
+sned <- sned %>%
+    mutate(
+        across(starts_with(c('efectivr','superar', 'mejorar','iniciar', 'integrar', 'igualdr')),
+         ~ ifelse(.x < 0, 0, .x)))
+
+# hay un colegio de GSE bajo que no está en sned
+# simce %>% anti_join(sned, by = 'rbd') %>% count(cod_grupo)
+
+# seleccionar variables sned
+sned_rbd <- sned %>%
+  select(rbd, efectivr, superar, mejorar, iniciar, integrar, igualdr)
+
+
 # juntar datos por rbd ------
 
 rbd <- simce %>%
@@ -255,7 +284,8 @@ rbd <- simce %>%
   left_join(idps_dim_rbd, by = 'rbd') %>%
   left_join(idps_sub_rbd, by = 'rbd') %>%
   left_join(docentes_2domedio_rbd, by = 'rbd') %>%
-  left_join(evaluacion_docente_rbd, by = 'rbd')
+  left_join(evaluacion_docente_rbd, by = 'rbd') %>%
+  left_join(sned_rbd, by = 'rbd')
 
 # número de docentes por estudiantes
 

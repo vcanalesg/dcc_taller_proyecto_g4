@@ -6,8 +6,7 @@
 # Efectividad: Resultados academicos (SIMCE).
 # Superacion: Evolucion y mejora de los resultados a lo largo del tiempo.
 # Iniciativa: Implementacion de innovaciones educativas.
-# Mejoramiento de las condiciones de trabajo: 
-# Entorno laboral del establecimiento.
+# Mejoramiento de las condiciones de trabajo: Entorno laboral del establecimiento.
 # Igualdad de oportunidades: Inclusion y retencion de alumnos.
 # Integracion y participacion: Involucramiento de profesores, padres y apoderados.
 
@@ -20,31 +19,36 @@ library(tidyverse)
 library(readr)
 library(janitor)
 
+options(scipen = 999)
 
 # datos --------
 
 path <- "/Users/vcanalesg/Documents/diplomado_dcc/0_taller_proyecto/datos/"
 
-df <- file.path(path, '20240503_SNED_2024_2025.csv') %>%
-    read_delim(delim = ";") %>%
-    clean_names()
+locale_es <- locale(decimal_mark = ",", grouping_mark = ".")
 
-glimpse(df)
+df <- file.path(path, "20240503_SNED_2024_2025.csv") |>
+  read_delim(delim = ";", locale = locale_es) |>
+  clean_names()
+
+df %>% select(ends_with('integrar')) %>% head()
 
 # explorar datos ------
 
-# las variables efectivr, superar estan como character
-# se deben pasar a numeric
-
+# pasar coma a punto para variables leidas como character
 df <- df %>%
-        mutate(efectivr_num = as.numeric(gsub(',', '.', efectivr)),
-               superar_num = as.numeric(gsub(',', '.', superar)),
-               mejorar_num = as.numeric(gsub(',', '.', mejorar)),
-               iniciar_num = as.numeric(gsub(',', '.', iniciar)),
-               integrar_num = gsub(',', '.', integrar),
-               igualdr_num = gsub(',', '.', igualdr),
-               efectivr_num = as.numeric(efectivr_num),
-               superar_num = as.numeric(superar_num))
+   mutate(efectivr = as.numeric(gsub(',', '.', efectivr)),
+          superar = as.numeric(gsub(',','.', superar)))
+
+
+# datos que tienen valor negativo pasarlos a 0 siguiendo la escala en el diccionario de variables
+df <- df %>%
+    mutate(
+        across(starts_with(c('efectivr','superar', 'mejorar','iniciar', 'integrar', 'igualdr')),
+         ~ ifelse(.x < 0, 0, .x)))
+
+glimpse(df)
+
 
 # contar valores perdidos
 
@@ -58,7 +62,7 @@ nrow(df) == length(unique(df$rbd))
 
 # revisar distribucion de puntajes 
 
-dimensiones <- c('efectivr_num','superar_num', 'mejorar','iniciar', 'integrar', 'igualdr')
+dimensiones <- c('efectivr','superar', 'mejorar','iniciar', 'integrar', 'igualdr')
 
 for (dim in dimensiones) {
     print(dim)
@@ -71,7 +75,15 @@ for (dim in dimensiones) {
     print()
 }
 
+# relacion entre las características
+
 df %>%
- filter(!is.na(efectivr)) %>%
- ggplot(aes(x = mejorar)) +
- geom_histogram()
+  select(indicer, all_of(dimensiones)) %>%
+  pivot_longer(cols = all_of(dimensiones), names_to = "dimension", values_to = "puntaje") %>%
+  ggplot(aes(x = indicer, y = puntaje)) +
+  geom_point(alpha = 0.3, size = 0.8) +
+  facet_wrap(~ dimension, scales = "free_y") +
+  labs(x = "Índice SNED", y = "Puntaje dimensión") +
+  theme_minimal()
+
+pairs(~efectivr + superar + mejorar + iniciar + integrar + igualdr, data = df)
