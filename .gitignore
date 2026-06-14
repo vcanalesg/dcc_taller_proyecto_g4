@@ -17,6 +17,7 @@
 # Folders to ignore
 datos/
 literatura/
+clases/
 
 # Temporary files
 *.tmp
