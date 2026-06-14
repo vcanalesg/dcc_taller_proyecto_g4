@@ -15,7 +15,6 @@
 .idea/
 
 # Folders to ignore
-datos/
 literatura/
 clases/
 
@@ -23,3 +22,9 @@ clases/
 *.tmp
 *.swp
 *~
+
+# Other files
+*.csv
+datos/Asistencia-anual-2024.rar
+*.pdf
+*.xlsx
