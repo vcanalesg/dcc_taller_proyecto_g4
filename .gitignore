@@ -28,3 +28,4 @@ clases/
 datos/Asistencia-anual-2024.rar
 *.pdf
 *.xlsx
+!*.parquet
