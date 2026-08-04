@@ -29,3 +29,4 @@ datos/Asistencia-anual-2024.rar
 *.pdf
 *.xlsx
 !*.parquet
+datos/matricula_estudiante_2024.parquet
